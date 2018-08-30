@@ -1,0 +1,169 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+const SHA256 = require("crypto-js/sha256");
+
+class node {
+    
+    
+    //CONSTRUCTOR OF CLASS NODE
+    
+    
+    constructor(nodenumber, timestamp, data = '', nodeid = '', previoushashvalue = '', childreferencenodeid = '' ,genesisreferencenodeid = '') {
+        this.nodenumber = nodenumber;
+        this.timestamp = timestamp;
+        this.data = data;
+        this.nodeid = nodeid;
+        this.previoushashvalue = previoushashvalue;
+        this.childreferencenodeid = childreferencenodeid;
+        this.genesisreferencenodeid = genesisreferencenodeid;
+        this.hashvalue = this.calculatehashvalue();
+    }
+
+    
+    //ENCRYPTION OF DATA INSIDE NODE USING SHA256 ENCRYPTION ALGORITHM GENERALLY USED IN BLOCKCHAINS ONE OF THE BEST ENCRYPTION ALGORITHMS ALSO BEING USED BY THE NSA
+
+    
+    calculatehashvalue() {
+        return SHA256(this.nodenumber + this.timestamp + this.previoushashvalue + this.childreferencenodeid + this.genesisreferencenodeid + JSON.stringify(this.data)).toString();
+    }
+    
+    
+}
+
+
+class chain{
+    
+    // THIS CONSTRUCTOR UPON CALLING CREATES A GENESIS BLOCK
+    
+    constructor() {
+        this.chain = [this.createGenesisnode()];
+    }
+
+    //THIS FUNCTION CREATES A GENESIS NODE 
+    
+    createGenesisnode() {
+        return new node(0, "30/08/2018", "Genesis block", "0" , "0" , "0" , "0" );
+    }
+    
+    //THIS FUNCTION RETURNS THE NODE AT A SPECIFIC INDEX
+    getcurrentnode() {
+        System.out.println("enter the index of node to be returned");
+        Scanner sca = new Scanner(System.in);
+         Int index = sca.nextInt();
+        return this.chain[this.chain.index-1];
+    }
+    
+    
+     //THIS FUNCTION RETURNS THE CURRENT NODE
+
+    getcurrentnode() {
+        return this.chain[this.chain.length - 1];
+    }
+    
+    
+    //THIS FUNCTION ADDS A NEW CHILD NODE TO THE CHAIN
+
+    addchildnode(newnode) {
+        newnode.previousHash = this.getLatestnode().hash;
+        newnode.hashvalue = newnode.calculateHashvalue();
+        this.chain.push(newnode);
+    }
+    
+   
+    //THIS FUNCTION IS USED TO CHECK THE HASHVALUE OF DATA WITH THE HASHVALUE OF DATA THAT HAS BEEN RECENTLY COMPUTED 
+
+    checkhashvalue() {
+        for (int i = 1; i < this.chain.length; i++){
+            const currentnode = this.chain[i];
+            const previousnode = this.chain[i - 1];
+
+            if (currentnode.hash != currentnode.calculateHashvalue()) {
+                system.out.println("THIS IS NOT THE OWNER");
+                return false;
+            }
+
+            if (currentnode.previousHash != previousnode.hash) {
+                system.out.println("THIS IS NOT THE OWNER");
+                return false;
+            }
+        }
+        
+        system.out.println("THIS IS THE OWNER");
+        return true;
+    }
+    
+    //THIS FUNCTION IS USED TO EDIT VALUE OF THE NODE
+    
+    editnode() 
+    {
+        System.out.println("enter the index of node");
+         Scanner sc = new Scanner(System.in);
+         Int index = sc.nextInt();
+         const currentnode = this.chain[index];
+         System.out.println("enter the data to be changed");
+         String data = sc.nextLine();
+         currentnode.data = data;
+         currentnode.previousHash = this.getcurrentnode().hash;
+         currentnode.hashvalue = currentnode.calculateHashvalue();
+         this.chain.push(currentnode);
+         
+    }
+    
+    //THIS FUNCTION RETURNS THE LONGEST CHAIN OF THE GENESIS NODE AND PRINTING HASHVALUE OF EACH NODE
+    returnchainfromgenesisblock()
+    {
+        for (int i = 1; i < this.chain.length; i++)
+        {
+            const currentnode = this.chain[i];
+            const previousnode = this.chain[i - 1];
+            System.out.println(currentnode.hash);
+        }
+    }
+    
+    //THIS FUNCTION RETURNS THE LONGEST CHAIN FROM ANY NODE AND PRINTS THE HASHVALUE OF THE NODES IN ITS PATH
+    
+    
+    returnchainfromanynode()
+    {
+         System.out.println("enter the index of node");
+         Scanner sc = new Scanner(System.in);
+         Int index = sc.nextInt();
+         for (int i = index; i < this.chain.length; i++)
+        {
+            const currentnode = this.chain[i];
+            const previousnode = this.chain[i - 1];
+            System.out.println(currentnode.hash);
+        }
+    
+    }
+    
+    //THIS FUNCTION CAN BE USED TO MERGE THE DATA OF TWO NODES INTO A SINGLE NODE AND CALCULATING THE NEW HASHVALUE OF THE RESULTANT NODE
+    
+    adddataoftwonodes()
+    {
+    System.out.println("enter the index of node 1");
+         Scanner scan = new Scanner(System.in);
+         Int index1 = scan.nextInt();
+         System.out.println("enter the index of node 2");
+         Scanner scann = new Scanner(System.in);
+         Int index2 = scann.nextInt();
+         const currentnode = this.chain[index1];
+         const currentnode1 = this.chain[index2];
+         currentnode.data = currentnode.data+currentnode1.data;
+         currentnode.previousHash = this.getcurrentnode().hash;
+         currentnode.hashvalue = currentnode.calculateHashvalue();
+         this.chain.push(currentnode);
+         
+    }
+}
+
+
+class Application
+{
+	public static void main (String[] args) throws java.lang.Exception
+	{
+		chain mychain = new chain();
+	}
+}
