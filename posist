@@ -66,7 +66,14 @@ class chain{
     //THIS FUNCTION ADDS A NEW CHILD NODE TO THE CHAIN
 
     addchildnode(newnode) {
-        newnode.previousHash = this.getLatestnode().hash;
+        System.out.println("enter the details of new node");
+        Scanner sc = new Scanner(System.in);
+        Int index = sc.nextInt();
+	String timestamp = sc.nextline();
+	String nodeid = sc.nextline();
+	String childreference = sc.nextline();
+	String genesisreference = sc.nextline();
+	newnode.previousHash = this.getLatestnode().hash;
         newnode.hashvalue = newnode.calculateHashvalue();
         this.chain.push(newnode);
     }
